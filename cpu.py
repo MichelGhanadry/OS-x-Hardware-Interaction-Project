@@ -27,3 +27,7 @@ class CPU():
 
     def get_cores_list(self):
         return self._cores_list
+
+    def set_frequency_limit(self, limit):
+        for core in self._cores_list:
+            core._frequency_limit = limit
