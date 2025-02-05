@@ -14,6 +14,7 @@ class Core():
         self._state = 'idle'
         self._up_tau = 5
         self._down_tau = 12
+        self._frequency_limit = MAX_FREQ
 
         self._step = 0
         self._steps_count = 0
@@ -52,6 +53,7 @@ class Core():
             delta = random.randint(0, 2*ERROR_BAR) - ERROR_BAR
             frequency = int(self.frequency + delta)
             frequency = max(MIN_FREQ, frequency)
+            frequency = min(self._frequency_limit, frequency)
             frequency = min(MAX_FREQ, frequency)
             self.frequency = frequency
             if self.frequency > MAX_FREQ or self.frequency < MIN_FREQ:
