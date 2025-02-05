@@ -1,10 +1,13 @@
 from cpu import CPU
 from time import sleep
+from window import Window
 
 class System():
     def __init__(self):
         self._is_locked = True
         self.cpu = CPU()
+
+        self.window = Window()
         return
 
     def unlock(self):
@@ -34,10 +37,3 @@ class System():
     def exit(self):
         self.cpu._exit()
         return
-
-    # def start_prime95(self):
-    #     if not self._is_locked:
-            
-
-    #     else:
-    #         print('system is locked!')
