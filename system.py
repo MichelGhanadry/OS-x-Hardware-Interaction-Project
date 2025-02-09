@@ -122,11 +122,4 @@ class System():
         self._windows_events_thread.join()
         self.window._running = False
         return
-
-
-    # def start_prime95(self):
-    #     if not self._is_locked:
-            
-
-    #     else:
-    #         print('system is locked!')
+        
