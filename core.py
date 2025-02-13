@@ -88,6 +88,8 @@ class Core():
 
             self.tempreture = max(24, target_tempreture)
             sleep(self._tempreture_tau)
+            if self.tempreture > 40:
+                print('the tempreture is too high!')
 
     def get_frequency(self):
         sleep(0.001)
