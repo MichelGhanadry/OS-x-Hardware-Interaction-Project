@@ -2,10 +2,12 @@ import pygame
 import threading
 import sys
 from windows_config import *
+from syscode import SysCode
 
 class Window():
     def __init__(self, windows_events):
         self._windows_events = windows_events
+        self.syscode = SysCode()
         self._running = False
         self._thread = threading.Thread(target=self.run_window)
         self._thread.start()
@@ -65,6 +67,8 @@ class Window():
             # Draw the button
             for button in buttons_list:
                 button.draw(screen)
+
+            self.syscode.draw(screen)
 
             # pygame.draw.rect(screen, button_color, button_rect)
             # b2.draw(screen)
