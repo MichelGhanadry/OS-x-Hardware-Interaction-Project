@@ -7,7 +7,7 @@ from window import Window
 class System():
     def __init__(self):
         self._is_locked = True
-        self.cpu = CPU()
+        self.cpu = CPU(self)
         self._sub_colors = ['lightblue', 'lightsalmon', 'lightgreen', 'lightcoral']
         self._monitors = {}
         self.num_of_monitors = 0
@@ -133,3 +133,10 @@ class System():
         self._windows_events_thread.join()
         self.window._running = False
         return
+
+    def trigger(self, event):
+        print('a')
+        if event == '2Hot':
+            print('b')
+            self.cpu.set_frequency_limit(1000)
+

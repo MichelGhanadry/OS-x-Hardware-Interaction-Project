@@ -7,7 +7,8 @@ MIN_FREQ = 400
 MAX_FREQ = 4000
 
 class Core():
-    def __init__(self):
+    def __init__(self, system):
+        self._system = system
         self.red_flag = False
         self.frequency = 400
         self.tempreture = 24
@@ -19,7 +20,7 @@ class Core():
 
         self._step = 0
         self._steps_count = 0
-        self._tempreture_tau = 4
+        self._tempreture_tau = 1
 
         self._update_frequency_thread = threading.Thread(target=self._update_frequency)
         self._update_frequency_thread.start()
@@ -75,11 +76,11 @@ class Core():
     def _update_tempreture(self):
         down_flag = False
         while(not self.red_flag):
-            if self.frequency > 3000:
+            if self.frequency >= 3000:
                 target_tempreture = self.tempreture + 1
             if self.frequency > 1000 and self.frequency < 3000:
                 target_tempreture = self.tempreture + random.randint(0, 2) - 1
-            if self.frequency < 1000:
+            if self.frequency <= 1000:
                 if down_flag:
                     target_tempreture = self.tempreture - 3
                 else:
@@ -89,7 +90,8 @@ class Core():
             self.tempreture = max(24, target_tempreture)
             sleep(self._tempreture_tau)
             if self.tempreture > 40:
-                print('the tempreture is too high!')
+                print('2HOT')
+                self._system.trigger(event='2Hot')
 
     def get_frequency(self):
         sleep(0.001)
