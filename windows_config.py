@@ -20,6 +20,9 @@ BORD_Y = MARGEN
 PIN_SHORT = 6
 PIN_LONG = 25
 
+CPU_DEFAULT_FREQ = 4000
+CYCLES_2HOT = 25
+
 sysencode = {
     # '0' : [0,1,2,3,4,5,6],
     # '0' : [1,1,1,1,1,1,1],
