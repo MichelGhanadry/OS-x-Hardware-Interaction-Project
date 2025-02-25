@@ -12,19 +12,23 @@ class SysCode():
         self._bord = pygame.Rect(BORD_X, BORD_Y, BORD_WIGHT, BORD_HIGHT)
         self._digits_list = [Digit(i) for i in range(num_Of_digits)]
         self.display_code()
+        return
 
     def draw(self, screen):
         pygame.draw.rect(screen, colors['white'], self._bord)
         for digit in self._digits_list:
            digit.draw(screen)
+        return
     
     def set_code(self, code):
         self.code = code
         self.display_code()
+        return
 
     def display_code(self):
         for i in range(self.num_Of_digits):
             self._digits_list[i].set_char(self.code[i])
+        return
 
     
 
@@ -47,8 +51,10 @@ class Digit():
         for i, pin in enumerate(self._pins):
            c = self._pins_colors[i]
            pygame.draw.rect(screen, colors[c], pin)
+        return
 
     def set_char(self, char):
         if char in sysencode:
             for index, val in enumerate(sysencode[char]):
                 self._pins_colors[index] = 'red' if val == 1 else 'gray'
+        return

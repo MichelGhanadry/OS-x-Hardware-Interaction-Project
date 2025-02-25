@@ -1,6 +1,7 @@
 colors = {
     'white'  : [255, 255, 255],
     'black'  : [0, 0, 0],
+    'gray'   : [235, 235, 235],
     'blue'   : [0, 0, 255],
     'green'  : [0, 255, 0],
     'red'    : [255, 0, 0],
@@ -18,6 +19,9 @@ BORD_X = SCREEN_WIGHT - BORD_WIGHT- MARGEN
 BORD_Y = MARGEN
 PIN_SHORT = 6
 PIN_LONG = 25
+
+CPU_DEFAULT_FREQ = 4000
+CYCLES_2HOT = 25
 
 sysencode = {
     # '0' : [0,1,2,3,4,5,6],
@@ -41,6 +45,6 @@ sysencode = {
     'E' : [1,1,1,0,1,1,0],
     'F' : [1,1,1,0,1,0,0],
     'H' : [0,1,1,1,1,0,1],
-    'O' : [1,1,0,1,1,1,1],
+    'o' : [0,0,1,0,1,1,1],
     't' : [0,1,1,0,1,1,0],
 }

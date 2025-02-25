@@ -30,7 +30,9 @@ cores = system.cpu.get_cores_list()
 
 frequency_monitor = system.start_cores_monitor(Core.get_frequency)
 tempreture_monitor = system.start_cores_monitor(Core.get_tempreture)
-system.wait(30)
+system.wait(5)
+system.start_prime95()
+system.wait(20)
 tempreture_data = system.stop_cores_monitor(tempreture_monitor)
 frequency_data = system.stop_cores_monitor(frequency_monitor)
 

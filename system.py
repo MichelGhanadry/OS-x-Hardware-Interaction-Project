@@ -3,11 +3,12 @@ from time import sleep
 import threading
 import matplotlib.pyplot as plt
 from window import Window
+from windows_config import CPU_DEFAULT_FREQ
 
 class System():
     def __init__(self):
         self._is_locked = True
-        self.cpu = CPU()
+        self.cpu = CPU(self)
         self._sub_colors = ['lightblue', 'lightsalmon', 'lightgreen', 'lightcoral']
         self._monitors = {}
         self.num_of_monitors = 0
@@ -63,7 +64,7 @@ class System():
         while(not self._monitors[monitor_id][1]):
             for i, core in enumerate(self.cpu.get_cores_list()):
                 self._monitors[monitor_id][2][i].append(monitor_function(core))
-            sleep(0.1)
+            sleep(0.5)
 
         return
 
@@ -133,3 +134,12 @@ class System():
         self._windows_events_thread.join()
         self.window._running = False
         return
+
+    def trigger(self, event):
+        if event == '2Hot':
+            print('2HOT')
+            self.cpu.set_frequency_limit(800)
+            self.window.syscode.set_code('2Hot')
+        elif event == '2Hot_End':
+            self.cpu.set_frequency_limit(CPU_DEFAULT_FREQ)
+            self.window.syscode.set_code('0000')

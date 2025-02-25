@@ -1,15 +1,16 @@
 from core import Core
 
 class CPU():
-    def __init__(self, n=4):
-        self.num_of_cores = n
-        self._cores_list = [Core() for _ in range(self.num_of_cores)]
+    def __init__(self, system, num_of_cores=4):
+        self.num_of_cores = num_of_cores
+        self._system = system
+
+        self._cores_list = [Core(self._system) for _ in range(self.num_of_cores)]
         self._wl = 0.1
 
         self.WF = {
 
         }
-        return
 
     def _exit(self):
         for core in self._cores_list:
