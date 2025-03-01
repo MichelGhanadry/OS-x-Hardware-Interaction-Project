@@ -1,5 +1,5 @@
 from pcode_config import *
-from time import time
+from time import time, sleep
 import threading
 
 class Pcode():
@@ -21,7 +21,22 @@ class Pcode():
         self._cpu_mode_thread.join()
         return
 
-    def _check_cpu_mode(self):
+    def _cpu_mode_check(self):
+        while not self._red_flag:
+            current_cpu_mode = self._get_cpu_mode()
+            if current_cpu_mode == self._cpu_mode:
+                self._cpu_mode_counter += 1
+                if time() - self._cpu_mode_start_time > CPU_IDLE_TIME:
+                    self._system.window._set_sleep_mode()
+                    print("go to sleep")
+            else:
+                self._cpu_mode = current_cpu_mode
+                self._cpu_mode_counter = 0
+                self._cpu_mode_start_time = time()
+            sleep(0.1)
+        return
+
+    def _get_cpu_mode(self):
         for core in self._cores:
             if core.get_frequency() > CPU_IDLE_FREQ:
                 return "stress"

@@ -1,4 +1,5 @@
 from cpu import CPU
+from pcode import Pcode
 from time import sleep
 import threading
 import matplotlib.pyplot as plt
@@ -17,6 +18,8 @@ class System():
         self._windows_events_red_flag = False
         self._windows_events_thread = threading.Thread(target=self._windows_events_handler)
         self._windows_events_thread.start()
+
+        self._pcode = Pcode(self)
         return
 
     def unlock(self):
@@ -130,6 +133,8 @@ class System():
 
     def exit(self):
         self.cpu._exit()
+        self._pcode._exit()
+        self.window._exit()
         self._windows_events_red_flag = True
         self._windows_events_thread.join()
         self.window._running = False
@@ -143,3 +148,4 @@ class System():
         elif event == '2Hot_End':
             self.cpu.set_frequency_limit(CPU_DEFAULT_FREQ)
             self.window.syscode.set_code('0000')
+
