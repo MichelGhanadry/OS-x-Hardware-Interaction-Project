@@ -27,13 +27,15 @@ class Pcode():
             if current_cpu_mode == self._cpu_mode:
                 self._cpu_mode_counter += 1
                 if time() - self._cpu_mode_start_time > CPU_IDLE_TIME:
-                    self._system.window._set_sleep_mode()
+                    self._system.window._set_sleep_mode(mode=True)
+                    self._cpu_mode = "sleep"
                     print("go to sleep")
             else:
                 self._cpu_mode = current_cpu_mode
                 self._cpu_mode_counter = 0
                 self._cpu_mode_start_time = time()
             sleep(0.1)
+
         return
 
     def _get_cpu_mode(self):
@@ -41,4 +43,7 @@ class Pcode():
             if core.get_frequency() > CPU_IDLE_FREQ:
                 return "stress"
         return "idle"
+
+    def wake_system(self):
+        self._system.window._set_sleep_mode(mode=False)
 
