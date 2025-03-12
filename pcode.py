@@ -10,21 +10,22 @@ class Pcode():
 
         self._cpu_mode = "idle"
         self._cpu_mode_counter = 0
-        self._cpu_mode_start_time = time()
+        self._absolute_start_time = time()
+        self._cpu_mode_start_time = self._absolute_start_time
         self.states_timeline_list = [(self._cpu_mode, self._cpu_mode_start_time)]
 
-        self._red_flag = False
+        self._cpu_mode_thread_flag = False
         self._cpu_mode_thread = threading.Thread(target=self._cpu_mode_check)
         self._cpu_mode_thread.start()
         return
 
     def _exit(self):
-        self._red_flag = True
+        self._cpu_mode_thread_flag = True
         self._cpu_mode_thread.join()
         return
 
     def _cpu_mode_check(self):
-        while not self._red_flag:
+        while not self._cpu_mode_thread_flag:
             current_cpu_mode = self._get_cpu_mode()
             if current_cpu_mode == self._cpu_mode:
                 self._cpu_mode_counter += 1
@@ -53,27 +54,28 @@ class Pcode():
     def wake_system(self):
         self._system.window._set_sleep_mode(mode=False)
         self._switch_cpu_mode(new_mode="idle")
+        return
 
     def _switch_cpu_mode(self, new_mode):
         self._cpu_mode = new_mode
         self._cpu_mode_counter = 0
         self._cpu_mode_start_time = time()
         self.states_timeline_list.append((self._cpu_mode, self._cpu_mode_start_time))
-
-
+        return
     
     def create_timeline(self):
+        d = self._absolute_start_time
         timelines = []
-        prev_state = self.states_timeline_list[0]
-        for state in self.states_timeline_list[1:] + [(self._cpu_mode , time())]:
-            print(state)
-            state_duration = state[1] - prev_state[1]
-            prev_state_end_time = self.states_timeline_list[-1][1]
-            timelines.append((prev_state_end_time, prev_state_end_time+state_duration, state[0]))
-            prev_state = state
+        clk_point = 0
+        state = self.states_timeline_list[0]
+        for next_state in self.states_timeline_list[1:] + [(self._cpu_mode , time())]:
+            state_duration = next_state[1] - state[1]
+            timelines.append((clk_point, clk_point+state_duration, state[0]))
+            state = next_state
+            clk_point += state_duration
 
         print(self.states_timeline_list)
         print(timelines)
         show_timeline(data=timelines, states=["sleep", "idle", "stress"])
-
+        return
 
