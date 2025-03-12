@@ -28,7 +28,10 @@ def show_timeline(data, states):
     ax.set_yticks([i+1 for i in range(len(states))])
     ax.set_yticklabels(states)
     plt.show()
+    
 
-# data = [(0,5,'sleep'),(6,9,'stress')]
-# states = ["sleep", "idle", "stress"]
-# show_timeline(data, states)
+data = [(0,5,'idle'),(5,8,'sleep'),(8,12,'idle'),(12,18,'stress'),
+        (18,23,'idle'),(23,30,'sleep'),(30,35,'idle'),(35,38,'sleep'),
+        (38,40,'idle'),(40,44,'stress'),(44,47,'idle')]
+states = ["sleep", "idle", "stress"]
+show_timeline(data, states)
