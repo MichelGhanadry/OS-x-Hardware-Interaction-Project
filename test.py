@@ -26,18 +26,23 @@ system.unlock()
 
 ########################################################################
 
-cores = system.cpu.get_cores_list()
+# cores = system.cpu.get_cores_list()
 
-frequency_monitor = system.start_cores_monitor(Core.get_frequency)
-tempreture_monitor = system.start_cores_monitor(Core.get_tempreture)
-system.wait(5)
-system.start_prime95()
-system.wait(20)
-tempreture_data = system.stop_cores_monitor(tempreture_monitor)
-frequency_data = system.stop_cores_monitor(frequency_monitor)
+# frequency_monitor = system.start_cores_monitor(Core.get_frequency)
+# tempreture_monitor = system.start_cores_monitor(Core.get_tempreture)
+# system.wait(5)
+# system.start_prime95()
+# system.wait(20)
+# tempreture_data = system.stop_cores_monitor(tempreture_monitor)
+# frequency_data = system.stop_cores_monitor(frequency_monitor)
 
-system.show_plot(frequency_data, single_plot=False, down_limit=20, up_limit=4400)
-system.show_plot(tempreture_data, single_plot=False, down_limit=20, up_limit=44)
+# system.show_plot(frequency_data, single_plot=False, down_limit=20, up_limit=4400)
+# system.show_plot(tempreture_data, single_plot=False, down_limit=20, up_limit=44)
+
+########################################################################
+
+system.wait(60)
+system._pcode.create_timeline()
 
 ########################################################################
 

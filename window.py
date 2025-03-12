@@ -14,6 +14,10 @@ class Window():
         self._thread = threading.Thread(target=self.run_window)
         self._thread.start()
         self._running_prime = False
+        self._in_sleep_mode = False
+
+        self._black_screen = None
+        return
 
     def run_window(self):
         # Initialize Pygame
@@ -63,6 +67,10 @@ class Window():
                             if button.layout.collidepoint(event.pos):
                                 button.click()
 
+                    if self._black_screen is not None:
+                        if self._black_screen.layout.collidepoint(event.pos):
+                            self._black_screen.click()
+
             # Draw the background image
             screen.blit(background_image, (0, 0))
 
@@ -76,12 +84,28 @@ class Window():
                     app.draw(screen)
 
             self.syscode.draw(screen)
+            
+            if self._in_sleep_mode:
+                if self._black_screen is None:
+                    self._black_screen = Button(0, 0, SCREEN_WIGHT, SCREEN_HIGHT, color="black", text='', action=self.wake_screen)
+                self._black_screen.draw(screen)
+            else:
+                self._black_screen = None
 
             pygame.display.flip()
 
         # Quit Pygame
         pygame.quit()
         # sys.exit()
+
+    def wake_screen(self, button):
+        print("screen wake")
+        self._windows_events.append(f'screen wake')
+        return
+
+    def _set_sleep_mode(self, mode):
+        self._in_sleep_mode = mode
+        return
 
     def create_button(self, x, y, width, height, color, test):
         button_rect = pygame.Rect(20, 20, 100, 100)  # x, y, width, height
