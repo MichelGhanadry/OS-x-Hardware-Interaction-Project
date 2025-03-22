@@ -1,4 +1,5 @@
 from cpu import CPU
+from gpu import GPU
 from pcode import Pcode
 from time import sleep
 import threading
@@ -10,6 +11,7 @@ class System():
     def __init__(self):
         self._is_locked = True
         self.cpu = CPU(self)
+        self.gpu = GPU(self, 1)
         self._sub_colors = ['lightblue', 'lightsalmon', 'lightgreen', 'lightcoral']
         self._monitors = {}
         self.num_of_monitors = 0
@@ -61,7 +63,7 @@ class System():
         self._monitors[monitor_id][1] = True
         monitor_thread.join()
         return monitor_results
-
+    
     def _monitor(self, monitor_id):
         monitor_function, monitor_red_flag, monitor_results, _ = self._monitors[monitor_id]
         self.cores_freq_results = [[] for _ in range(self.cpu.num_of_cores)]
@@ -88,6 +90,23 @@ class System():
         if not self._is_locked:
             print('stop_prime95 v')
             self.cpu._run_stress(-0.98)
+        else:
+            print('system is locked!')
+        return
+    
+    def start_video(self):
+        if not self._is_locked:
+            self.gpu._run_stress(0.60)
+            self.cpu._run_stress(0.20)
+        else:
+            print('system is locked!')
+        return
+
+    def stop_video(self):
+        if not self._is_locked:
+            print('stop_video v')
+            self.gpu._run_stress(-0.60)
+            self.cpu._run_stress(-0.20)
         else:
             print('system is locked!')
         return
@@ -135,6 +154,7 @@ class System():
 
     def exit(self):
         self.cpu._exit()
+        self.gpu._exit()
         self._pcode._exit()
         self.window._exit()
         self._windows_events_red_flag = True

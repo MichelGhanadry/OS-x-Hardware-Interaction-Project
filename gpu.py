@@ -1,15 +1,16 @@
 from core import Core
 
-class GUP():
-    def __init__(self, n=100):
+class GPU():
+    def __init__(self, system, n=100):
+        self._system = system
         self.num_of_PUs = n
-        self._PUs_list = [Core() for _ in range(self.num_of_PUs)]
+        self._PUs_list = [Core(self._system) for _ in range(self.num_of_PUs)]
         self._wl = 0.1
         return
 
     def _exit(self):
-        for PU in self._PUs_list:
-            PU._exit()
+        for pu in self._PUs_list:
+            pu._exit()
 
     def _run_stress(self, n):
         self._wl += n
