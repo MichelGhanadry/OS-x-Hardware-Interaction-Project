@@ -6,7 +6,7 @@ from timeline import show_timeline
 class Pcode():
     def __init__(self, system):
         self._system = system
-        self._cores = self._system.cpu.get_cores_list()
+        self._cores = self._system.cpu.get_cores_list() + self._system.gpu.get_PUs_list()
 
         self._cpu_mode = "idle"
         self._cpu_mode_counter = 0

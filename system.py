@@ -39,8 +39,15 @@ class System():
                         self.start_prime95()
                     if event == 'stop prime95':
                         self.stop_prime95()
+
+                    if event == 'start video':
+                        self.start_video()
+                    if event == 'stop video':
+                        self.stop_video()
+
                     if event == 'screen wake':
                         self._pcode.wake_system()
+
                     # if event == 'exit':
                     #     self.exit()
 
