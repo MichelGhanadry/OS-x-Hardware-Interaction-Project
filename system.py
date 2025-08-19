@@ -6,11 +6,12 @@ import threading
 import matplotlib.pyplot as plt
 from window import Window
 from windows_config import CPU_DEFAULT_FREQ
+from math import sqrt
 
 class System():
     def __init__(self):
         self._is_locked = True
-        self.cpu = CPU(self)
+        self.cpu = CPU(self, 1)
         self.gpu = GPU(self, 1)
         self._sub_colors = ['lightblue', 'lightsalmon', 'lightgreen', 'lightcoral']
         self._monitors = {}
@@ -81,6 +82,35 @@ class System():
             sleep(0.5)
 
         return
+    
+
+    def start_gpu_monitor(self, monitor_function):
+        self.num_of_monitors += 1
+        monitor_red_flag = False
+        monitor_results = [[] for _ in range(self.gpu.num_of_PUs)]
+        monitor_thread = threading.Thread(target=self._gpu_monitor, args=(self.num_of_monitors,))
+        self._monitors[self.num_of_monitors] = [monitor_function, monitor_red_flag, monitor_results, monitor_thread]
+        
+        monitor_thread.start()
+        return self.num_of_monitors
+
+    def stop_gpu_monitor(self, monitor_id):
+        monitor_function, monitor_red_flag, monitor_results, monitor_thread = self._monitors[monitor_id]
+
+        self._monitors[monitor_id][1] = True
+        monitor_thread.join()
+        return monitor_results
+    
+    def _gpu_monitor(self, monitor_id):
+        monitor_function, monitor_red_flag, monitor_results, _ = self._monitors[monitor_id]
+
+        while(not self._monitors[monitor_id][1]):
+            for i, core in enumerate(self.gpu.get_PUs_list()):
+                self._monitors[monitor_id][2][i].append(monitor_function(core))
+            sleep(0.5)
+
+        return
+
 
     def wait(self, n):
         print(f'waiting for {n} sec')
@@ -104,7 +134,7 @@ class System():
     def start_video(self):
         if not self._is_locked:
             self.gpu._run_stress(0.60)
-            self.cpu._run_stress(0.20)
+            self.cpu._run_stress(0.40)
         else:
             print('system is locked!')
         return
@@ -113,11 +143,41 @@ class System():
         if not self._is_locked:
             print('stop_video v')
             self.gpu._run_stress(-0.60)
-            self.cpu._run_stress(-0.20)
+            self.cpu._run_stress(-0.40)
         else:
             print('system is locked!')
         return
 
+    def show_gpu_plot(self, data_list, down_limit=0, up_limit=4400):
+        for i in range(len(data_list)):
+            ys = data_list[i]
+            xs = range(len(ys))
+            plt.plot(xs, ys)
+            plt.ylim(down_limit, up_limit)
+            plt.fill_between(xs, ys, color="orchid", alpha=0.3)
+
+        plt.show()
+        return
+    
+    def show_multi_gpu_plot(self, data_list, down_limit=0, up_limit=4400):
+        num_of_plots = len(data_list)
+        n = int(sqrt(self.gpu.num_of_PUs))
+        fig, axs = plt.subplots(n, n)
+        for i in range(num_of_plots):
+            ys = data_list[i]
+            xs = range(len(ys))
+            axs[i%n][int(i/n)].plot(xs, ys)
+            axs[i%n][int(i/n)].set_ylim(down_limit, up_limit)
+            axs[i%n][int(i/n)].fill_between(xs, ys, color='orchid', alpha=0.3)
+        
+        for ax in axs.flat:
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
+
+        plt.show()
+        return
+    
+    
     def _show_single_plot(self, data_list, down_limit=0, up_limit=4400):
         for i in range(len(data_list)):
             ys = data_list[i]

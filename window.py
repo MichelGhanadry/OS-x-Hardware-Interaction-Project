@@ -44,7 +44,7 @@ class Window():
         # button_color = RED
 
         prime_button = Button(20, 20, 100, 100, text='Prime95', action=self.prime_button_action)
-        video_button = Button(130, 20, 100, 100, text='Video', action=self.video_button_action)
+        video_button = Button(140, 20, 100, 100, text='Video', action=self.video_button_action)
         # b2 = Button(140, 20, 100, 100, RED, 'n', self.prime_button_action)
         buttons_list = [prime_button, video_button]
         self.apps_dict = {}
